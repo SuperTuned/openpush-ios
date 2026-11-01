@@ -1,0 +1,149 @@
+name: Swift package
+
+# Pull requests and pushes to main. Documentation-only changes cannot break the
+# package, so they skip this workflow; public-content.yml still checks them.
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+
+# A newer push to the same pull request cancels the run it supersedes; runs on
+# main always finish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  # The simulator the iOS test steps run on. Hosted macos-15 runners ship it;
+  # a local runner needs a simulator with this name.
+  SIMULATOR: iPhone 16
+
+jobs:
+  test:
+    runs-on: macos-15
+    # About 11 minutes on a hosted runner.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - name: Show toolchain
+        run: swift --version
+      - name: Test package
+        run: swift test
+      - name: Test package (Release)
+        run: swift test -c release
+      # The setup tool is a separate package, so an app depending on the SDK
+      # never resolves its dependencies; it is tested here on its own.
+      - name: Test setup tool
+        run: swift test --package-path Tools/OpenPushSetup
+      # Applies the setup tool to copies of its fixtures and builds each one, so
+      # a project the tool writes is one Xcode accepts.
+      - name: Build applied setup fixtures
+        run: Tools/OpenPushSetup/scripts/build-applied-fixtures.sh
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Build receive-only example
+        working-directory: Examples/ReceiveOnlyExample
+        run: |
+          test "$(plutil -extract NSSupportsLiveActivities raw Support/Info.plist)" = "true"
+          test "$(plutil -extract NSSupportsLiveActivitiesFrequentUpdates raw Support/Info.plist)" = "true"
+          xcodegen generate
+          xcodebuild build \
+            -project ReceiveOnlyExample.xcodeproj \
+            -scheme ReceiveOnlyExample \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+      # This target links ONLY OpenPushOneSignal, so this step is what proves the
+      # facade carries every call site a host migrating from another push SDK
+      # already wrote: a missing member fails the build here rather than being
+      # documented as an extra edit.
+      - name: Build the migration example (compatibility facade)
+        working-directory: Examples/MigratedFromOneSignal
+        run: |
+          xcodegen generate
+          xcodebuild build \
+            -project MigratedFromOneSignal.xcodeproj \
+            -scheme MigratedFromOneSignal \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+      # An existing service extension with OpenPush's two share-mode lines added,
+      # so a change to `handleIfOpenPush` or its expiry twin fails here.
+      - name: Build the shared extension example
+        working-directory: Examples/SharedExtensionExample
+        run: |
+          xcodegen generate
+          xcodebuild build \
+            -project SharedExtensionExample.xcodeproj \
+            -scheme SharedExtensionExample \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+      # The scheme is generated from the package name, so this says out loud
+      # what the next step depends on.
+      - name: Show package schemes
+        run: xcodebuild -list
+      # `swift test` runs on the macOS host, where the UIKit and WebKit paths
+      # are compiled out. Only a simulator destination builds and exercises
+      # them, so a break in the in-app message view, the overlay window, or the
+      # background assertions fails here and nowhere else.
+      #
+      # The package scheme's test action carries every test target, and the
+      # counts below are what proves it. `xcodebuild` prints one "Executed N
+      # tests" line per bundle and another for the run, so reading the last one
+      # reports whichever bundle happened to finish last as though it were the
+      # whole leg — which is how a silently dropped target would look exactly
+      # like a passing one. Every expected bundle is named here instead, and a
+      # bundle that produced no summary fails the step.
+      - name: Test package on iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -scheme openpush-ios-Package \
+            -destination "platform=iOS Simulator,name=$SIMULATOR" \
+            -skipPackagePluginValidation \
+            | tee simulator-tests.log
+          echo "Per-target results on the simulator:"
+          for target in OpenPushTests OpenPushCoreTests; do
+            # `|| true` inside the substitution, not after it: the step runs
+            # under `bash -e`, so a bundle that produced no summary makes the
+            # pipeline exit non-zero and aborts the step before the emptiness
+            # check below can say which bundle went missing.
+            summary=$(grep -A1 -E "Test Suite '$target\.xctest' (passed|failed)" \
+              simulator-tests.log | grep -m1 -oE 'Executed [0-9]+ tests?, with ([0-9]+ tests? skipped and )?[0-9]+ failures?' \
+              || true)
+            if [ -z "$summary" ]; then
+              echo "::error::$target did not run on the simulator leg"
+              exit 1
+            fi
+            echo "  $target: $summary"
+          done
+      - name: Run Feature Lab UI tests
+        working-directory: Examples/ReceiveOnlyExample
+        run: |
+          xcodebuild test \
+            -project ReceiveOnlyExample.xcodeproj \
+            -scheme ReceiveOnlyExample \
+            -destination "platform=iOS Simulator,name=$SIMULATOR" \
+            -only-testing:ReceiveOnlyExampleUITests \
+            CODE_SIGNING_ALLOWED=NO
+      # The two entitlements the app cannot receive a push without: an
+      # aps-environment, and an App Group that resolves from the shared
+      # xcconfig rather than being written out here and drifting from it.
+      - name: Entitlements sanity
+        working-directory: Examples/ReceiveOnlyExample
+        run: |
+          plutil -extract aps-environment raw Support/App.entitlements
+          grep -q '\$(OPENPUSH_APP_GROUP)' Support/App.entitlements

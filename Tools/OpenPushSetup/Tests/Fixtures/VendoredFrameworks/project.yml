@@ -1,0 +1,45 @@
+name: Unity-iPhone
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+targets:
+  Unity-iPhone:
+    type: application
+    platform: iOS
+    sources: [Classes]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.unity
+        INFOPLIST_FILE: Info.plist
+        CODE_SIGN_ENTITLEMENTS: Unity-iPhone.entitlements
+    dependencies:
+      - target: UnityFramework
+      - target: NotificationService
+        embed: true
+  UnityFramework:
+    type: framework
+    platform: iOS
+    sources: [UnityFramework]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.unity3d.framework
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - framework: Frameworks/OpenPushNative/OpenPush.xcframework
+        embed: false
+      - framework: Frameworks/OpenPushNative/OpenPushCore.xcframework
+        embed: false
+  NotificationService:
+    type: app-extension
+    platform: iOS
+    sources: [NotificationService]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.unity.NotificationService
+        INFOPLIST_FILE: NotificationService-Info.plist
+        CODE_SIGN_ENTITLEMENTS: NotificationService.entitlements
+    dependencies:
+      - framework: Frameworks/OpenPushNative/OpenPushNSE.xcframework
+        embed: false
+      - framework: Frameworks/OpenPushNative/OpenPushCore.xcframework
+        embed: false

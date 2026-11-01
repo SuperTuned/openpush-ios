@@ -1,0 +1,12 @@
+{
+  "Simulator Target Bundle": "ai.openpush.example.sharedextension",
+  "aps": {
+    "alert": {
+      "title": "Host push",
+      "body": "The extension's own code handles this one and appends (host) to the title."
+    },
+    "sound": "default",
+    "mutable-content": 1
+  },
+  "host_message_id": "host-001"
+}

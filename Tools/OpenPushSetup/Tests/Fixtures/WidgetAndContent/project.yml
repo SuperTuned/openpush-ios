@@ -1,0 +1,35 @@
+name: Gallery
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.1"
+targets:
+  Gallery:
+    type: application
+    platform: iOS
+    sources: [Gallery]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.gallery
+        INFOPLIST_FILE: Gallery-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Gallery.entitlements
+    dependencies:
+      - target: GalleryWidget
+        embed: true
+      - target: GalleryContent
+        embed: true
+  GalleryWidget:
+    type: app-extension
+    platform: iOS
+    sources: [GalleryWidget]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.gallery.GalleryWidget
+        INFOPLIST_FILE: Widget-Info.plist
+  GalleryContent:
+    type: app-extension
+    platform: iOS
+    sources: [GalleryContent]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.gallery.GalleryContent
+        INFOPLIST_FILE: Content-Info.plist

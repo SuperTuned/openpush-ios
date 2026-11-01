@@ -1,0 +1,3 @@
+// The App Group and Keychain group both targets sign with.
+SHOP_APP_GROUP = group.com.example.shop
+SHOP_KEYCHAIN_GROUP = $(AppIdentifierPrefix)com.example.shop.shared

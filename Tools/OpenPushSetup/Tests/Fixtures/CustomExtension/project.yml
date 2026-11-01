@@ -1,0 +1,36 @@
+name: Shop
+configFiles:
+  Debug: Support/Shared.xcconfig
+  Release: Support/Shared.xcconfig
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    DEVELOPMENT_TEAM: ABCDE12345
+packages:
+  RichMedia:
+    url: https://github.com/example/rich-media-ios
+    from: 2.1.0
+targets:
+  Shop:
+    type: application
+    platform: iOS
+    sources: [Shop]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.shop
+        INFOPLIST_FILE: Support/App-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Support/App.entitlements
+    dependencies:
+      - target: RichPush
+        embed: true
+  RichPush:
+    type: app-extension
+    platform: iOS
+    sources: [RichPush]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.shop.RichPush
+        INFOPLIST_FILE: Support/RichPush-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Support/RichPush.entitlements
+    dependencies:
+      - package: RichMedia

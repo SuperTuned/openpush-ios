@@ -1,0 +1,26 @@
+name: Duo
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+targets:
+  Duo:
+    type: application
+    platform: iOS
+    sources: [Duo]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.duo
+        INFOPLIST_FILE: Duo-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Duo.entitlements
+    dependencies:
+      - target: DuoService
+        embed: true
+  DuoService:
+    type: app-extension
+    platform: iOS
+    sources: [DuoService]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.duo.DuoService
+        INFOPLIST_FILE: DuoService-Info.plist
+        CODE_SIGN_ENTITLEMENTS: DuoService.entitlements

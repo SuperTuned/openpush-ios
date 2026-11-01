@@ -1,0 +1,30 @@
+// Every identifier and credential this sample needs, in one file.
+//
+// The values below build and run on the Simulator without a signing team, and
+// the placeholder credentials keep OpenPush uninitialized. For a device, copy
+// `Local.xcconfig.example` to `Local.xcconfig`, fill it in, and run
+// `xcodegen generate` again — the optional include at the bottom overrides
+// whichever of these you set there.
+//
+// `Local.xcconfig` is git-ignored, so your team id and SDK key stay out of the
+// repository.
+
+// Your Apple Developer team. Empty is fine for a Simulator build.
+DEVELOPMENT_TEAM =
+
+// The reverse-DNS prefix the app's and the extension's bundle ids are built from.
+OPENPUSH_BUNDLE_PREFIX = ai.openpush.example.sharedextension
+
+// The App Group the app mirrors its OpenPush configuration and APNs token into,
+// and the extension reads them back out of. Used by both entitlements files and
+// by both Info.plists.
+OPENPUSH_APP_GROUP = group.ai.openpush.example.sharedextension
+
+// The credentials from the OpenPush console. Left as placeholders the app
+// registers for push and shows its APNs token, but never initializes OpenPush.
+OPENPUSH_APP_ID = replace-with-app-id
+OPENPUSH_SDK_KEY = replace-with-public-sdk-key
+
+// Optional by design: a checkout with no `Local.xcconfig` still generates and
+// builds.
+#include? "Local.xcconfig"

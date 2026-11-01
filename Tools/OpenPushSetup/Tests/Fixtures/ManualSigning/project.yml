@@ -1,0 +1,44 @@
+name: Bank
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    DEVELOPMENT_TEAM: ABCDE12345
+    CODE_SIGN_STYLE: Manual
+  configs:
+    Debug:
+      CODE_SIGN_IDENTITY: Apple Development
+    Release:
+      CODE_SIGN_IDENTITY: Apple Distribution
+targets:
+  Bank:
+    type: application
+    platform: iOS
+    sources: [Bank]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.bank
+        INFOPLIST_FILE: Bank-Info.plist
+      configs:
+        Debug:
+          CODE_SIGN_ENTITLEMENTS: Bank-Debug.entitlements
+          PROVISIONING_PROFILE_SPECIFIER: Bank Development
+        Release:
+          CODE_SIGN_ENTITLEMENTS: Bank-Release.entitlements
+          PROVISIONING_PROFILE_SPECIFIER: Bank AppStore
+    dependencies:
+      - target: BankService
+        embed: true
+  BankService:
+    type: app-extension
+    platform: iOS
+    sources: [BankService]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.bank.BankService
+        INFOPLIST_FILE: BankService-Info.plist
+        CODE_SIGN_ENTITLEMENTS: BankService.entitlements
+      configs:
+        Debug:
+          PROVISIONING_PROFILE_SPECIFIER: Bank NSE Development
+        Release:
+          PROVISIONING_PROFILE_SPECIFIER: Bank NSE AppStore

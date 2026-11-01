@@ -1,0 +1,34 @@
+name: Notes
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+    GENERATE_INFOPLIST_FILE: YES
+targets:
+  Notes:
+    type: application
+    platform: iOS
+    sources:
+      - path: Notes/Notes
+        excludes: ["*.plist", "*.entitlements"]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.notes
+        INFOPLIST_FILE: Notes/Notes/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Notes
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        CODE_SIGN_ENTITLEMENTS: Notes/Notes/Notes.entitlements
+    dependencies:
+      - target: NotesService
+        embed: true
+  NotesService:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Notes/NotesService
+        excludes: ["*.plist", "*.entitlements"]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.notes.NotesService
+        INFOPLIST_FILE: Notes/NotesService/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: NotesService
+        CODE_SIGN_ENTITLEMENTS: Notes/NotesService/NotesService.entitlements

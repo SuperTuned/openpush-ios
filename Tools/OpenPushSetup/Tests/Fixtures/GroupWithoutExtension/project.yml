@@ -1,0 +1,14 @@
+name: Solo
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+targets:
+  Solo:
+    type: application
+    platform: iOS
+    sources: [Solo]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.solo
+        INFOPLIST_FILE: Info.plist
+        CODE_SIGN_ENTITLEMENTS: Solo.entitlements

@@ -1,0 +1,35 @@
+# Exceptions for scripts/check-public-content.sh, one per line:
+#   <path glob> <pattern id> [<line regex>] -- <reason>
+# Keep this list as short as possible. An entry that matches nothing fails the check.
+
+# The ignore rules that keep working notes and agent state out of the repository.
+.gitignore internal-doc ^(PRODUCT|DESIGN)\.md$ -- ignore rules for local working notes
+.gitignore agent-path ^\.(impeccable|claude|superpowers)/$ -- ignore rules for local tool state
+
+# NOTICE and the compatibility docs carry the trademark and non-affiliation notice.
+NOTICE onesignal -- trademark and non-affiliation notice
+NOTICE onesignal-inc -- trademark and non-affiliation notice
+MIGRATING-FROM-ONESIGNAL.md onesignal -- migration guide for the compatibility layer
+MIGRATING-FROM-ONESIGNAL.md onesignal-inc -- trademark notice in the migration guide
+OpenPushOneSignal.podspec onesignal -- compatibility pod description and trademark notice
+OpenPushOneSignal.podspec onesignal-inc -- trademark notice in the compatibility pod description
+Examples/MigratedFromOneSignal/README.md onesignal-inc -- trademark notice in the migrated example
+
+# The compatibility layer: its module, the migrated example app and the facade's tests.
+Sources/OpenPushOneSignal/** onesignal -- the compatibility facade provides the previous SDK's API names for migrating apps
+Examples/MigratedFromOneSignal/** onesignal -- example app migrated from the previous SDK
+Tests/OpenPushTests/OpenPushOneSignal*Tests.swift onesignal -- tests of the compatibility facade
+Tests/OpenPushTests/OpenPushBadgeTests.swift onesignal OneSignal\.Notifications\.setBadgeCount -- badge test through the compatibility facade
+Tests/OpenPushTests/OpenPushLaunchURLTests.swift onesignal OneSignal\.(initialize|applyLaunchURLDefault|launchURLsSuppressed) -- launch URL tests through the compatibility facade
+
+# Live Activities: the compatibility attributes, and the payload key they share with widgets built for the previous SDK.
+Sources/OpenPushLiveActivities/OneSignalLiveActivityAttributes.swift onesignal -- compatibility Live Activity attributes
+Sources/OpenPushLiveActivities/OpenPushLiveActivityAttributes.swift onesignal "onesignal" -- reserved payload key shared with compatibility widgets
+
+# Migration detection in the setup tool, its fixture export and the tests that read it.
+Tools/OpenPushSetup/Sources/OpenPushSetupKit/Vendors/KnownVendorFingerprints.swift onesignal -- fingerprints of the previous SDK that setup detects
+Tools/OpenPushSetup/Tests/Fixtures/OneSignalStyleExport/** onesignal -- fixture project exported with the previous SDK installed
+Tools/OpenPushSetup/Tests/OpenPushSetupKitTests/FixtureScanTests.swift onesignal -- tests of migration detection
+Tools/OpenPushSetup/Tests/OpenPushSetupKitTests/ServiceExtensionModeTests.swift onesignal -- tests of migration detection
+Tools/OpenPushSetup/Tests/OpenPushSetupKitTests/ApplyTests.swift onesignal OneSignalNotificationServiceExtension -- test of migration of the previous SDK's extension target
+Tools/OpenPushSetup/scripts/build-applied-fixtures.sh onesignal OneSignalNotificationServiceExtension -- builds the migration fixture's extension target

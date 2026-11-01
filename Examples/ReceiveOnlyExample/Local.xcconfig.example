@@ -1,0 +1,28 @@
+// Copy this file to `Local.xcconfig`, fill in the values, and run
+// `xcodegen generate`. `Local.xcconfig` is git-ignored; this example is not.
+//
+// Delete or comment out a line to keep its Demo-mode default from
+// `Build.xcconfig`; an empty value overrides that default rather than falling
+// back to it.
+
+// Your 10-character Apple Developer team identifier.
+// DEVELOPMENT_TEAM = ABCDE12345
+
+// The reverse-DNS prefix for the app, the Notification Service Extension, the
+// Live Activity widget, and the UI test bundle.
+OPENPUSH_BUNDLE_PREFIX = ai.openpush.example
+
+// Must match the App Group you enabled for both the app and the extension.
+OPENPUSH_APP_GROUP = group.ai.openpush.example
+
+// Must match the Keychain Sharing group you enabled for both. Uncomment this
+// together with `DEVELOPMENT_TEAM` above and keep the `$(DEVELOPMENT_TEAM)`
+// reference rather than pasting the team id twice — the app and the extension
+// read the resolved string at runtime, so it has to resolve here as well as in
+// the entitlements. Uncommented while `DEVELOPMENT_TEAM` is not set, it resolves
+// to a leading dot and the Keychain silently finds nothing.
+// OPENPUSH_KEYCHAIN_GROUP = $(DEVELOPMENT_TEAM).ai.openpush.example.shared
+
+// From the OpenPush console. The SDK key is the public one.
+// OPENPUSH_APP_ID = your-app-id
+// OPENPUSH_SDK_KEY = your-public-sdk-key

@@ -1,0 +1,12 @@
+{
+  "Simulator Target Bundle": "ai.openpush.example.sharedextension",
+  "aps": {
+    "alert": {
+      "title": "OpenPush push",
+      "body": "OpenPush's handler delivers this one; the title is unchanged."
+    },
+    "sound": "default",
+    "mutable-content": 1
+  },
+  "op_message_id": "simulator-shared-001"
+}

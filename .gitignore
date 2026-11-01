@@ -1,0 +1,32 @@
+.build/
+.swiftpm/
+*.xcodeproj/
+Examples/*/Local.xcconfig
+build/
+# The setup tool's fixtures are committed projects, generated once by XcodeGen.
+!Tools/OpenPushSetup/Tests/Fixtures/*/*.xcodeproj/
+
+# Local machine and editor files
+.DS_Store
+xcuserdata/
+DerivedData/
+.idea/
+.env
+local.properties
+
+# Signing material
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+
+# Working notes and agent state that never belong in the repository
+PRODUCT.md
+DESIGN.md
+.impeccable/
+.claude/
+.superpowers/
+
+# JVM crash logs and compiler replay files (they record local paths)
+hs_err_pid*.log
+replay_pid*.log

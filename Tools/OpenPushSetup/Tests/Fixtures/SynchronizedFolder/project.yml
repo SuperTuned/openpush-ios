@@ -1,0 +1,16 @@
+name: Sync
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+    GENERATE_INFOPLIST_FILE: YES
+targets:
+  Sync:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sync
+        type: syncedFolder
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.sync
+        INFOPLIST_KEY_CFBundleDisplayName: Sync

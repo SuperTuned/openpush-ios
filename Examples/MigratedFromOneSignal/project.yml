@@ -1,0 +1,26 @@
+name: MigratedFromOneSignal
+options:
+  minimumXcodeGenVersion: 2.40.0
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+packages:
+  OpenPushSDK:
+    path: ../..
+targets:
+  MigratedFromOneSignal:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.openpush.example.migrated
+        CODE_SIGN_ENTITLEMENTS: Support/App.entitlements
+        INFOPLIST_FILE: Support/Info.plist
+    dependencies:
+      # The ONLY SDK product this app links. It is the whole migration: the app
+      # source imports OpenPushOneSignal and nothing else from OpenPush, which is
+      # the machine-checked version of "the call sites did not change".
+      - package: OpenPushSDK
+        product: OpenPushOneSignal

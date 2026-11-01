@@ -1,0 +1,108 @@
+name: ReceiveOnlyExample
+options:
+  minimumXcodeGenVersion: 2.40.0
+# One file for every identifier and credential, inherited by every target.
+# `Build.xcconfig` carries the Demo-mode defaults and optionally includes an
+# untracked `Local.xcconfig` for Live mode.
+configFiles:
+  Debug: Build.xcconfig
+  Release: Build.xcconfig
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+packages:
+  OpenPushSDK:
+    path: ../..
+targets:
+  ReceiveOnlyExample:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+      - Shared
+      - Resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(OPENPUSH_BUNDLE_PREFIX)
+        CODE_SIGN_ENTITLEMENTS: Support/App.entitlements
+        INFOPLIST_FILE: Support/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    dependencies:
+      - package: OpenPushSDK
+        product: OpenPush
+      - package: OpenPushSDK
+        product: OpenPushCore
+      # Not imported by the example: linked so CI compiles the opt-in
+      # compatibility facade for a real iOS target, not only for the
+      # `swift test` host.
+      - package: OpenPushSDK
+        product: OpenPushOneSignal
+      - target: NotificationService
+        embed: true
+      - target: OpenPushActivityWidget
+        embed: true
+  NotificationService:
+    type: app-extension
+    platform: iOS
+    sources:
+      - NotificationService
+      # The App Group, Keychain group, and credential service, in the one file
+      # the app compiles too, so the two copies cannot drift.
+      - Shared/ExampleIdentifiers.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(OPENPUSH_BUNDLE_PREFIX).NotificationService
+        CODE_SIGN_ENTITLEMENTS: Support/NSE.entitlements
+        INFOPLIST_FILE: Support/NSE-Info.plist
+    dependencies:
+      - package: OpenPushSDK
+        product: OpenPushCore
+      - package: OpenPushSDK
+        product: OpenPushNSE
+  OpenPushActivityWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "16.1"
+    sources:
+      - WidgetExtension
+      # Named file by file: the widget links OpenPushLiveActivities only, so it
+      # must not compile the identifiers file, which uses OpenPushCore.
+      - Shared/ExampleDeliveryAttributes.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(OPENPUSH_BUNDLE_PREFIX).ActivityWidget
+        INFOPLIST_FILE: Support/Widget-Info.plist
+        APPLICATION_EXTENSION_API_ONLY: YES
+        SKIP_INSTALL: YES
+    dependencies:
+      - package: OpenPushSDK
+        product: OpenPushLiveActivities
+  ReceiveOnlyExampleUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - UITests
+    dependencies:
+      - target: ReceiveOnlyExample
+    settings:
+      base:
+        TEST_TARGET_NAME: ReceiveOnlyExample
+        PRODUCT_BUNDLE_IDENTIFIER: $(OPENPUSH_BUNDLE_PREFIX).UITests
+        # The bundle has no Info.plist of its own in the repository, and a test
+        # bundle cannot be signed without one. Let the build write it.
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  ReceiveOnlyExample:
+    build:
+      targets:
+        ReceiveOnlyExample: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - ReceiveOnlyExampleUITests
+    archive:
+      config: Release

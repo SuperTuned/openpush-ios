@@ -1,0 +1,26 @@
+name: Vault
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    DEVELOPMENT_TEAM: ABCDE12345
+    CODE_SIGN_STYLE: Manual
+  configs:
+    Debug:
+      CODE_SIGN_IDENTITY: Apple Development
+    Release:
+      CODE_SIGN_IDENTITY: Apple Distribution
+targets:
+  Vault:
+    type: application
+    platform: iOS
+    sources: [Vault]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.vault
+        INFOPLIST_FILE: Vault-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Vault.entitlements
+      configs:
+        Debug:
+          PROVISIONING_PROFILE_SPECIFIER: Vault Development
+        Release:
+          PROVISIONING_PROFILE_SPECIFIER: Vault AppStore

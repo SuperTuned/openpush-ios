@@ -1,0 +1,55 @@
+name: SharedExtensionExample
+options:
+  minimumXcodeGenVersion: 2.40.0
+# Every identifier and credential comes from `Build.xcconfig`, which optionally
+# includes an untracked `Local.xcconfig`.
+configFiles:
+  Debug: Build.xcconfig
+  Release: Build.xcconfig
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+packages:
+  OpenPushSDK:
+    path: ../..
+targets:
+  SharedExtensionExample:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(OPENPUSH_BUNDLE_PREFIX)
+        CODE_SIGN_ENTITLEMENTS: Support/App.entitlements
+        INFOPLIST_FILE: Support/Info.plist
+    dependencies:
+      - package: OpenPushSDK
+        product: OpenPush
+      - target: NotificationService
+        embed: true
+  # The app's own extension, which already handles its own pushes. OpenPush is
+  # added to it, not beside it: OpenPushNSE is its only new dependency.
+  NotificationService:
+    type: app-extension
+    platform: iOS
+    sources:
+      - NotificationService
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(OPENPUSH_BUNDLE_PREFIX).NotificationService
+        CODE_SIGN_ENTITLEMENTS: Support/NSE.entitlements
+        INFOPLIST_FILE: Support/NSE-Info.plist
+    dependencies:
+      - package: OpenPushSDK
+        product: OpenPushNSE
+
+schemes:
+  SharedExtensionExample:
+    build:
+      targets:
+        SharedExtensionExample: all
+    run:
+      config: Debug
+    archive:
+      config: Release

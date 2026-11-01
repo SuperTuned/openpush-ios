@@ -1,0 +1,20 @@
+{
+  "Simulator Target Bundle": "ai.openpush.example",
+  "aps": {
+    "alert": {
+      "title": "OpenPush remote test",
+      "body": "Foreground and click listeners should both report this message."
+    },
+    "sound": "default",
+    "mutable-content": 1
+  },
+  "op_message_id": "simulator-remote-001",
+  "op_action_category": "openpush_demo_actions",
+  "op_actions": [
+    { "id": "open_order", "label": "Open order" },
+    { "id": "dismiss_order", "label": "Dismiss" }
+  ],
+  "image_url": "https://picsum.photos/seed/openpush/600/300",
+  "deep_link": "openpush-example://orders/42",
+  "source": "simctl"
+}

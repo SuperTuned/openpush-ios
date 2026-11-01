@@ -1,0 +1,31 @@
+name: Unity-iPhone
+options:
+  bundleIdPrefix: com.example
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "13.0"
+    DEVELOPMENT_TEAM: ABCDE12345
+targets:
+  Unity-iPhone:
+    type: application
+    platform: iOS
+    sources: [Classes]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.game
+        INFOPLIST_FILE: Info.plist
+        CODE_SIGN_ENTITLEMENTS: Unity-iPhone/Unity-iPhone.entitlements
+    dependencies:
+      - target: OneSignalNotificationServiceExtension
+        embed: true
+  OneSignalNotificationServiceExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: OneSignalNotificationServiceExtension
+        excludes: ["*.plist", "*.entitlements"]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.game.OneSignalNotificationServiceExtension
+        INFOPLIST_FILE: OneSignalNotificationServiceExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements

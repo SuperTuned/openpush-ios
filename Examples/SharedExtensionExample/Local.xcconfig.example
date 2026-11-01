@@ -1,0 +1,18 @@
+// Copy this file to `Local.xcconfig`, fill in the values, and run
+// `xcodegen generate`. `Local.xcconfig` is git-ignored; this example is not.
+//
+// Delete or comment out a line to keep its default from `Build.xcconfig`; an
+// empty value overrides that default rather than falling back to it.
+
+// Your 10-character Apple Developer team identifier.
+// DEVELOPMENT_TEAM = ABCDE12345
+
+// The reverse-DNS prefix for the app and the Notification Service Extension.
+OPENPUSH_BUNDLE_PREFIX = ai.openpush.example.sharedextension
+
+// Must match the App Group you enabled for both the app and the extension.
+OPENPUSH_APP_GROUP = group.ai.openpush.example.sharedextension
+
+// From the OpenPush console. The SDK key is the public one.
+// OPENPUSH_APP_ID = your-app-id
+// OPENPUSH_SDK_KEY = your-public-sdk-key

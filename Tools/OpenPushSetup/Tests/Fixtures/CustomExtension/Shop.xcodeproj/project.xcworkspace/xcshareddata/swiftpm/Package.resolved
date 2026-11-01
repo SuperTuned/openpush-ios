@@ -1,0 +1,15 @@
+{
+  "originHash" : "0000000000000000000000000000000000000000000000000000000000000000",
+  "pins" : [
+    {
+      "identity" : "rich-media-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/example/rich-media-ios",
+      "state" : {
+        "revision" : "1111111111111111111111111111111111111111",
+        "version" : "2.1.4"
+      }
+    }
+  ],
+  "version" : 3
+}

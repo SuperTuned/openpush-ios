@@ -1,0 +1,52 @@
+name: Bug report
+description: Something in the SDK does not work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not report security problems here. See SECURITY.md instead.
+  - type: input
+    id: version
+    attributes:
+      label: SDK version
+      placeholder: "1.2.2"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Xcode, iOS and device
+      placeholder: "Xcode 16.4, iOS 18.5, iPhone 15 (device or Simulator)"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How the SDK is installed
+      options:
+        - Swift Package Manager
+        - CocoaPods
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: The smallest code or project that shows the problem. Remove app ids, SDK keys and tokens.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant SDK log lines, with app ids, keys and tokens removed.
+      render: text

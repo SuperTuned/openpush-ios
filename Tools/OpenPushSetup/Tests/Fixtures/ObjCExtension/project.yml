@@ -1,0 +1,26 @@
+name: Legacy
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+targets:
+  Legacy:
+    type: application
+    platform: iOS
+    sources: [Legacy]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.legacy
+        INFOPLIST_FILE: Legacy-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Legacy.entitlements
+    dependencies:
+      - target: LegacyService
+        embed: true
+  LegacyService:
+    type: app-extension
+    platform: iOS
+    sources: [LegacyService]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.legacy.LegacyService
+        INFOPLIST_FILE: LegacyService-Info.plist
+        CODE_SIGN_ENTITLEMENTS: LegacyService.entitlements

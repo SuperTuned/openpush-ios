@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDisplayName</key>
+    <string>Migrated From OneSignal</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <!-- EDIT 3 · the one non-code entry the migration adds. OpenPush needs a
+         public SDK key in addition to the app id, and it reads it from here so
+         that initialize keeps the v5 signature. -->
+    <key>OpenPushSDKKey</key>
+    <string>replace-with-public-sdk-key</string>
+    <key>UILaunchScreen</key>
+    <dict/>
+</dict>
+</plist>
